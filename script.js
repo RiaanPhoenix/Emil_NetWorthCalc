@@ -263,8 +263,19 @@ class NetWorthCalculator {
         const canvas = document.getElementById('growthChart');
         const ctx = canvas.getContext('2d');
         
+        // Set proper canvas dimensions for crisp rendering
+        const rect = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        
+        ctx.scale(dpr, dpr);
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        
         // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, rect.width, rect.height);
         
         const currentNetWorth = this.getCurrentNetWorth();
         const monthlyInvestment = this.getInputValue('monthlyInvestment');
@@ -283,42 +294,46 @@ class NetWorthCalculator {
         }
         
         // Chart dimensions
-        const padding = 60;
-        const chartWidth = canvas.width - 2 * padding;
-        const chartHeight = canvas.height - 2 * padding;
+        const padding = 80;
+        const chartWidth = rect.width - 2 * padding;
+        const chartHeight = rect.height - 2 * padding;
         
         const maxValue = Math.max(...dataPoints);
         const minValue = Math.min(...dataPoints, 0);
         const valueRange = maxValue - minValue;
         
         // Draw axes
-        ctx.strokeStyle = '#374151';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(padding, padding);
-        ctx.lineTo(padding, canvas.height - padding);
-        ctx.lineTo(canvas.width - padding, canvas.height - padding);
+        ctx.lineTo(padding, rect.height - padding);
+        ctx.lineTo(rect.width - padding, rect.height - padding);
         ctx.stroke();
         
         // Draw grid lines
-        ctx.strokeStyle = '#e5e7eb';
+        ctx.strokeStyle = '#cbd5e1';
         ctx.lineWidth = 1;
         for (let i = 1; i < 5; i++) {
             const y = padding + (chartHeight * i / 5);
             ctx.beginPath();
             ctx.moveTo(padding, y);
-            ctx.lineTo(canvas.width - padding, y);
+            ctx.lineTo(rect.width - padding, y);
             ctx.stroke();
         }
         
-        // Draw data line
-        ctx.strokeStyle = '#10b981';
-        ctx.lineWidth = 3;
+        // Draw data line with gradient
+        const gradient = ctx.createLinearGradient(0, padding, 0, rect.height - padding);
+        gradient.addColorStop(0, '#10b981');
+        gradient.addColorStop(1, '#059669');
+        
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 4;
         ctx.beginPath();
         
         dataPoints.forEach((value, index) => {
             const x = padding + (chartWidth * index / (years));
-            const y = canvas.height - padding - ((value - minValue) / valueRange * chartHeight);
+            const y = rect.height - padding - ((value - minValue) / valueRange * chartHeight);
             
             if (index === 0) {
                 ctx.moveTo(x, y);
@@ -329,35 +344,58 @@ class NetWorthCalculator {
         
         ctx.stroke();
         
-        // Draw data points
-        ctx.fillStyle = '#059669';
+        // Draw area under curve
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+        ctx.beginPath();
         dataPoints.forEach((value, index) => {
             const x = padding + (chartWidth * index / (years));
-            const y = canvas.height - padding - ((value - minValue) / valueRange * chartHeight);
+            const y = rect.height - padding - ((value - minValue) / valueRange * chartHeight);
+            
+            if (index === 0) {
+                ctx.moveTo(x, rect.height - padding);
+                ctx.lineTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+        ctx.lineTo(padding + chartWidth, rect.height - padding);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Draw data points
+        ctx.fillStyle = '#047857';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        dataPoints.forEach((value, index) => {
+            const x = padding + (chartWidth * index / (years));
+            const y = rect.height - padding - ((value - minValue) / valueRange * chartHeight);
             
             ctx.beginPath();
-            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.arc(x, y, 6, 0, 2 * Math.PI);
             ctx.fill();
+            ctx.stroke();
         });
         
         // Add labels
-        ctx.fillStyle = '#1f2937';
-        ctx.font = '12px Inter';
+        ctx.fillStyle = '#1e293b';
+        ctx.font = '14px Inter';
         ctx.textAlign = 'center';
         
         // X-axis labels (years)
-        for (let i = 0; i <= years; i += Math.max(1, Math.floor(years / 10))) {
+        const stepSize = Math.max(1, Math.floor(years / 10));
+        for (let i = 0; i <= years; i += stepSize) {
             const x = padding + (chartWidth * i / years);
-            const y = canvas.height - padding + 20;
-            ctx.fillText(i.toString(), x, y);
+            const y = rect.height - padding + 30;
+            ctx.fillText(`${i} years`, x, y);
         }
         
         // Y-axis labels (values)
         ctx.textAlign = 'right';
+        ctx.font = '12px Inter';
         for (let i = 0; i <= 5; i++) {
             const value = minValue + (valueRange * i / 5);
-            const x = padding - 10;
-            const y = canvas.height - padding - (chartHeight * i / 5) + 4;
+            const x = padding - 15;
+            const y = rect.height - padding - (chartHeight * i / 5) + 5;
             ctx.fillText(this.formatCurrency(value), x, y);
         }
     }
