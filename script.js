@@ -261,21 +261,26 @@ class NetWorthCalculator {
 
     drawGrowthChart(years) {
         const canvas = document.getElementById('growthChart');
+        const wrapper = canvas.parentElement;
         const ctx = canvas.getContext('2d');
         
-        // Set proper canvas dimensions for crisp rendering
-        const rect = canvas.getBoundingClientRect();
+        // Set canvas dimensions to match wrapper
+        const wrapperRect = wrapper.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
         
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
+        canvas.width = wrapperRect.width * dpr;
+        canvas.height = wrapperRect.height * dpr;
+        
+        canvas.style.width = wrapperRect.width + 'px';
+        canvas.style.height = wrapperRect.height + 'px';
         
         ctx.scale(dpr, dpr);
-        canvas.style.width = rect.width + 'px';
-        canvas.style.height = rect.height + 'px';
         
         // Clear canvas
-        ctx.clearRect(0, 0, rect.width, rect.height);
+        ctx.clearRect(0, 0, wrapperRect.width, wrapperRect.height);
+        
+        const canvasWidth = wrapperRect.width;
+        const canvasHeight = wrapperRect.height;
         
         const currentNetWorth = this.getCurrentNetWorth();
         const monthlyInvestment = this.getInputValue('monthlyInvestment');
@@ -295,8 +300,8 @@ class NetWorthCalculator {
         
         // Chart dimensions
         const padding = 80;
-        const chartWidth = rect.width - 2 * padding;
-        const chartHeight = rect.height - 2 * padding;
+        const chartWidth = canvasWidth - 2 * padding;
+        const chartHeight = canvasHeight - 2 * padding;
         
         const maxValue = Math.max(...dataPoints);
         const minValue = Math.min(...dataPoints, 0);
@@ -307,8 +312,8 @@ class NetWorthCalculator {
         ctx.lineWidth = 3;
         ctx.beginPath();
         ctx.moveTo(padding, padding);
-        ctx.lineTo(padding, rect.height - padding);
-        ctx.lineTo(rect.width - padding, rect.height - padding);
+        ctx.lineTo(padding, canvasHeight - padding);
+        ctx.lineTo(canvasWidth - padding, canvasHeight - padding);
         ctx.stroke();
         
         // Draw grid lines
@@ -318,12 +323,12 @@ class NetWorthCalculator {
             const y = padding + (chartHeight * i / 5);
             ctx.beginPath();
             ctx.moveTo(padding, y);
-            ctx.lineTo(rect.width - padding, y);
+            ctx.lineTo(canvasWidth - padding, y);
             ctx.stroke();
         }
         
         // Draw data line with gradient
-        const gradient = ctx.createLinearGradient(0, padding, 0, rect.height - padding);
+        const gradient = ctx.createLinearGradient(0, padding, 0, canvasHeight - padding);
         gradient.addColorStop(0, '#10b981');
         gradient.addColorStop(1, '#059669');
         
@@ -333,7 +338,7 @@ class NetWorthCalculator {
         
         dataPoints.forEach((value, index) => {
             const x = padding + (chartWidth * index / (years));
-            const y = rect.height - padding - ((value - minValue) / valueRange * chartHeight);
+            const y = canvasHeight - padding - ((value - minValue) / valueRange * chartHeight);
             
             if (index === 0) {
                 ctx.moveTo(x, y);
@@ -349,16 +354,16 @@ class NetWorthCalculator {
         ctx.beginPath();
         dataPoints.forEach((value, index) => {
             const x = padding + (chartWidth * index / (years));
-            const y = rect.height - padding - ((value - minValue) / valueRange * chartHeight);
+            const y = canvasHeight - padding - ((value - minValue) / valueRange * chartHeight);
             
             if (index === 0) {
-                ctx.moveTo(x, rect.height - padding);
+                ctx.moveTo(x, canvasHeight - padding);
                 ctx.lineTo(x, y);
             } else {
                 ctx.lineTo(x, y);
             }
         });
-        ctx.lineTo(padding + chartWidth, rect.height - padding);
+        ctx.lineTo(padding + chartWidth, canvasHeight - padding);
         ctx.closePath();
         ctx.fill();
         
@@ -368,7 +373,7 @@ class NetWorthCalculator {
         ctx.lineWidth = 2;
         dataPoints.forEach((value, index) => {
             const x = padding + (chartWidth * index / (years));
-            const y = rect.height - padding - ((value - minValue) / valueRange * chartHeight);
+            const y = canvasHeight - padding - ((value - minValue) / valueRange * chartHeight);
             
             ctx.beginPath();
             ctx.arc(x, y, 6, 0, 2 * Math.PI);
@@ -385,7 +390,7 @@ class NetWorthCalculator {
         const stepSize = Math.max(1, Math.floor(years / 10));
         for (let i = 0; i <= years; i += stepSize) {
             const x = padding + (chartWidth * i / years);
-            const y = rect.height - padding + 30;
+            const y = canvasHeight - padding + 30;
             ctx.fillText(`${i} years`, x, y);
         }
         
@@ -395,7 +400,7 @@ class NetWorthCalculator {
         for (let i = 0; i <= 5; i++) {
             const value = minValue + (valueRange * i / 5);
             const x = padding - 15;
-            const y = rect.height - padding - (chartHeight * i / 5) + 5;
+            const y = canvasHeight - padding - (chartHeight * i / 5) + 5;
             ctx.fillText(this.formatCurrency(value), x, y);
         }
     }

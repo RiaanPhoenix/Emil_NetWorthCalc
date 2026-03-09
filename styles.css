@@ -211,26 +211,26 @@ main {
 .metric .label {
     display: block;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 0.8rem;
-    color: #e2e8f0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .metric.primary .label {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 .metric .value {
     display: block;
     font-size: 1.8rem;
-    font-weight: 800;
-    color: #f8fafc;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 900;
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .metric.primary .value {
-    color: #ffffff;
+    color: #ffffff !important;
     font-size: 2rem;
 }
 
@@ -260,15 +260,27 @@ main {
 .projection-card .timeframe {
     display: block;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 700;
     margin-bottom: 0.5rem;
-    opacity: 0.9;
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .projection-card .projected-value {
     display: block;
     font-size: 1.3rem;
-    font-weight: 700;
+    font-weight: 900;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.projection-card .click-hint {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+    color: #ffffff !important;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Habit analyzer */
@@ -312,12 +324,12 @@ main {
     font-weight: 700;
     margin-bottom: 1.5rem;
     text-align: center;
-    color: #f1f5f9;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .habit-card.investment-card h4 {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 .habit-timeframes {
@@ -339,33 +351,34 @@ main {
 }
 
 .timeframe-item .period {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.95rem;
-    color: #cbd5e1;
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .habit-card.investment-card .timeframe-item .period {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 .timeframe-item .cost,
 .timeframe-item .investment-value {
-    font-weight: 800;
+    font-weight: 900;
     font-size: 1.1rem;
-    color: #f8fafc;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .habit-card.investment-card .timeframe-item .cost,
 .habit-card.investment-card .timeframe-item .investment-value {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 .opportunity-cost {
     text-align: center;
     padding: 2rem;
     background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
+    color: #ffffff;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
 }
@@ -373,15 +386,18 @@ main {
 .opportunity-metric .label {
     display: block;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 700;
     margin-bottom: 0.5rem;
-    opacity: 0.9;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .opportunity-metric .value {
     display: block;
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 900;
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 /* Footer */
@@ -558,12 +574,20 @@ footer p {
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-#growthChart {
+.chart-wrapper {
     width: 100%;
     height: 500px;
     border-radius: 15px;
     background: rgba(248, 250, 252, 0.98);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+#growthChart {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 15px;
+    display: block;
 }
 
 .chart-legend {
@@ -615,10 +639,10 @@ footer p {
 
 .bar-label {
     flex: 0 0 220px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
-    color: #e2e8f0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .habit-bar {
@@ -652,10 +676,10 @@ footer p {
 .bar-value {
     flex: 0 0 140px;
     text-align: right;
-    font-weight: 800;
-    color: #f8fafc;
+    font-weight: 900;
+    color: #ffffff !important;
     font-size: 1.1rem;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Number formatting */
