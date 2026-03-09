@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verklýsing - Net Worth & Savings Calculator</title>
+    <title>Net Worth and Savings Calculator</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="container">
-            <h1>Verklýsing</h1>
-            <p class="tagline">Net worth and savings calculator</p>
+            <h1>Net Worth and Savings Calculator</h1>
+            <p class="tagline">Understand your financial future</p>
         </div>
     </header>
 
@@ -52,20 +52,38 @@
                     <div class="input-group">
                         <h4>Liabilities</h4>
                         <div class="input-row">
-                            <label for="debts">Debts & Liabilities</label>
+                            <label for="debts">Other Debts & Liabilities</label>
                             <input type="number" id="debts" placeholder="0" min="0" step="0.01">
                         </div>
-                        <div class="input-row">
-                            <label for="mortgage">Mortgage</label>
-                            <input type="number" id="mortgage" placeholder="0" min="0" step="0.01">
+                        <div class="loan-group">
+                            <div class="input-row">
+                                <label for="mortgage">Mortgage Balance</label>
+                                <input type="number" id="mortgage" placeholder="0" min="0" step="0.01">
+                            </div>
+                            <div class="input-row interest-rate-row">
+                                <label for="mortgageRate">Interest Rate (%)</label>
+                                <input type="number" id="mortgageRate" placeholder="4.5" min="0" max="20" step="0.1">
+                            </div>
                         </div>
-                        <div class="input-row">
-                            <label for="creditcards">Credit Card Debt</label>
-                            <input type="number" id="creditcards" placeholder="0" min="0" step="0.01">
+                        <div class="loan-group">
+                            <div class="input-row">
+                                <label for="creditcards">Credit Card Debt</label>
+                                <input type="number" id="creditcards" placeholder="0" min="0" step="0.01">
+                            </div>
+                            <div class="input-row interest-rate-row">
+                                <label for="creditcardsRate">Interest Rate (%)</label>
+                                <input type="number" id="creditcardsRate" placeholder="18.0" min="0" max="30" step="0.1">
+                            </div>
                         </div>
-                        <div class="input-row">
-                            <label for="loans">Other Loans</label>
-                            <input type="number" id="loans" placeholder="0" min="0" step="0.01">
+                        <div class="loan-group">
+                            <div class="input-row">
+                                <label for="loans">Other Loans</label>
+                                <input type="number" id="loans" placeholder="0" min="0" step="0.01">
+                            </div>
+                            <div class="input-row interest-rate-row">
+                                <label for="loansRate">Interest Rate (%)</label>
+                                <input type="number" id="loansRate" placeholder="6.0" min="0" max="25" step="0.1">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -96,27 +114,50 @@
                         <input type="number" id="monthlyInvestment" placeholder="0" min="0" step="0.01">
                     </div>
                     <div class="input-row">
-                        <label for="annualReturn">Expected Annual Return (%)</label>
+                        <label for="annualReturn">Expected Annual Return (%) - Based on S&P 500 Historical Average: 7%</label>
                         <input type="number" id="annualReturn" placeholder="7" min="0" max="20" step="0.1" value="7">
                     </div>
                 </div>
 
                 <div class="projection-grid">
-                    <div class="projection-card">
+                    <div class="projection-card clickable" data-years="10">
                         <span class="timeframe">10 Years</span>
                         <span class="projected-value" id="projection10">$0</span>
+                        <span class="click-hint">Click for details</span>
                     </div>
-                    <div class="projection-card">
+                    <div class="projection-card clickable" data-years="20">
                         <span class="timeframe">20 Years</span>
                         <span class="projected-value" id="projection20">$0</span>
+                        <span class="click-hint">Click for details</span>
                     </div>
-                    <div class="projection-card">
+                    <div class="projection-card clickable" data-years="30">
                         <span class="timeframe">30 Years</span>
                         <span class="projected-value" id="projection30">$0</span>
+                        <span class="click-hint">Click for details</span>
                     </div>
-                    <div class="projection-card">
+                    <div class="projection-card clickable" data-years="50">
                         <span class="timeframe">50 Years</span>
                         <span class="projected-value" id="projection50">$0</span>
+                        <span class="click-hint">Click for details</span>
+                    </div>
+                </div>
+                
+                <div class="growth-chart-container" id="growthChartContainer" style="display: none;">
+                    <h4 id="chartTitle">Net Worth Growth Over Time</h4>
+                    <canvas id="growthChart" width="800" height="400"></canvas>
+                    <div class="chart-legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4f46e5;"></div>
+                            <span>Current Net Worth</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #10b981;"></div>
+                            <span>Monthly Investments</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f59e0b;"></div>
+                            <span>Total Growth</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -160,7 +201,7 @@
                             </div>
                         </div>
                         <div class="habit-card investment-card">
-                            <h4>If Invested Instead</h4>
+                            <h4>If Invested Instead (S&P 500 at 7% annually)</h4>
                             <div class="habit-timeframes">
                                 <div class="timeframe-item">
                                     <span class="period">1 Year:</span>
@@ -183,6 +224,26 @@
                             <span class="value" id="opportunityCost">$0</span>
                         </div>
                     </div>
+                    
+                    <div class="habit-visual-container">
+                        <h4>Visual Impact</h4>
+                        <div class="habit-bars">
+                            <div class="habit-bar-item">
+                                <span class="bar-label">Direct Cost (30 years)</span>
+                                <div class="habit-bar">
+                                    <div class="habit-bar-fill cost-bar" id="costBarFill"></div>
+                                </div>
+                                <span class="bar-value" id="costBarValue">$0</span>
+                            </div>
+                            <div class="habit-bar-item">
+                                <span class="bar-label">Investment Value (30 years)</span>
+                                <div class="habit-bar">
+                                    <div class="habit-bar-fill investment-bar" id="investmentBarFill"></div>
+                                </div>
+                                <span class="bar-value" id="investmentBarValue">$0</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -190,7 +251,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 Verklýsing. Making financial decisions transparent.</p>
+            <p>&copy; Emil Skúli Einarsson.</p>
         </div>
     </footer>
 

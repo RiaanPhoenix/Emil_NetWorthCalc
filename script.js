@@ -10,7 +10,8 @@ class NetWorthCalculator {
         // Net worth calculation inputs
         const netWorthInputs = [
             'cash', 'investments', 'retirement', 'realestate', 'otherassets',
-            'debts', 'mortgage', 'creditcards', 'loans'
+            'debts', 'mortgage', 'creditcards', 'loans',
+            'mortgageRate', 'creditcardsRate', 'loansRate'
         ];
 
         netWorthInputs.forEach(id => {
@@ -38,6 +39,15 @@ class NetWorthCalculator {
                 element.addEventListener('change', () => this.updateHabitAnalysis());
             }
         });
+
+        // Projection card clicks
+        const projectionCards = document.querySelectorAll('.projection-card.clickable');
+        projectionCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const years = parseInt(card.getAttribute('data-years'));
+                this.showGrowthChart(years);
+            });
+        });
     }
 
     updateCalculations() {
@@ -52,12 +62,10 @@ class NetWorthCalculator {
     }
 
     formatCurrency(amount) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        }).format(Math.abs(amount));
+        // Format with periods as thousands separators (European style)
+        const formatted = Math.abs(amount).toFixed(0);
+        const parts = formatted.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        return '$' + parts;
     }
 
     updateNetWorth() {
@@ -210,6 +218,147 @@ class NetWorthCalculator {
         const opportunityElement = document.getElementById('opportunityCost');
         if (opportunityElement) {
             opportunityElement.textContent = this.formatCurrency(opportunityCost);
+        }
+
+        // Update visual bars
+        this.updateHabitBars(habitCosts[30], investmentValues[30]);
+    }
+
+    updateHabitBars(costValue, investmentValue) {
+        const maxValue = Math.max(costValue, investmentValue);
+        
+        const costBar = document.getElementById('costBarFill');
+        const investmentBar = document.getElementById('investmentBarFill');
+        const costBarValue = document.getElementById('costBarValue');
+        const investmentBarValue = document.getElementById('investmentBarValue');
+
+        if (costBar && investmentBar && costBarValue && investmentBarValue) {
+            const costPercentage = (costValue / maxValue) * 100;
+            const investmentPercentage = (investmentValue / maxValue) * 100;
+
+            costBar.style.width = costPercentage + '%';
+            investmentBar.style.width = investmentPercentage + '%';
+            
+            costBarValue.textContent = this.formatCurrency(costValue);
+            investmentBarValue.textContent = this.formatCurrency(investmentValue);
+        }
+    }
+
+    showGrowthChart(years) {
+        const chartContainer = document.getElementById('growthChartContainer');
+        const chartTitle = document.getElementById('chartTitle');
+        
+        if (chartContainer && chartTitle) {
+            chartContainer.style.display = 'block';
+            chartTitle.textContent = `Net Worth Growth Over ${years} Years`;
+            
+            // Scroll to chart
+            chartContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            this.drawGrowthChart(years);
+        }
+    }
+
+    drawGrowthChart(years) {
+        const canvas = document.getElementById('growthChart');
+        const ctx = canvas.getContext('2d');
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const currentNetWorth = this.getCurrentNetWorth();
+        const monthlyInvestment = this.getInputValue('monthlyInvestment');
+        const annualReturn = this.getInputValue('annualReturn');
+        
+        // Calculate data points for each year
+        const dataPoints = [];
+        for (let year = 0; year <= years; year++) {
+            const value = this.calculateCompoundGrowth(
+                currentNetWorth,
+                monthlyInvestment,
+                annualReturn,
+                year
+            );
+            dataPoints.push(value);
+        }
+        
+        // Chart dimensions
+        const padding = 60;
+        const chartWidth = canvas.width - 2 * padding;
+        const chartHeight = canvas.height - 2 * padding;
+        
+        const maxValue = Math.max(...dataPoints);
+        const minValue = Math.min(...dataPoints, 0);
+        const valueRange = maxValue - minValue;
+        
+        // Draw axes
+        ctx.strokeStyle = '#374151';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, canvas.height - padding);
+        ctx.lineTo(canvas.width - padding, canvas.height - padding);
+        ctx.stroke();
+        
+        // Draw grid lines
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 1;
+        for (let i = 1; i < 5; i++) {
+            const y = padding + (chartHeight * i / 5);
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(canvas.width - padding, y);
+            ctx.stroke();
+        }
+        
+        // Draw data line
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        
+        dataPoints.forEach((value, index) => {
+            const x = padding + (chartWidth * index / (years));
+            const y = canvas.height - padding - ((value - minValue) / valueRange * chartHeight);
+            
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+        
+        ctx.stroke();
+        
+        // Draw data points
+        ctx.fillStyle = '#059669';
+        dataPoints.forEach((value, index) => {
+            const x = padding + (chartWidth * index / (years));
+            const y = canvas.height - padding - ((value - minValue) / valueRange * chartHeight);
+            
+            ctx.beginPath();
+            ctx.arc(x, y, 4, 0, 2 * Math.PI);
+            ctx.fill();
+        });
+        
+        // Add labels
+        ctx.fillStyle = '#1f2937';
+        ctx.font = '12px Inter';
+        ctx.textAlign = 'center';
+        
+        // X-axis labels (years)
+        for (let i = 0; i <= years; i += Math.max(1, Math.floor(years / 10))) {
+            const x = padding + (chartWidth * i / years);
+            const y = canvas.height - padding + 20;
+            ctx.fillText(i.toString(), x, y);
+        }
+        
+        // Y-axis labels (values)
+        ctx.textAlign = 'right';
+        for (let i = 0; i <= 5; i++) {
+            const value = minValue + (valueRange * i / 5);
+            const x = padding - 10;
+            const y = canvas.height - padding - (chartHeight * i / 5) + 4;
+            ctx.fillText(this.formatCurrency(value), x, y);
         }
     }
 
