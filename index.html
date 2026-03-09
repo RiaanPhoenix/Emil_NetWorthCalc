@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verklýsing - Net Worth & Savings Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Verklýsing</h1>
+            <p class="tagline">Net worth and savings calculator</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h2>Understand how everyday financial decisions affect your long-term net worth</h2>
+            <p>Get clear, personal insights into your financial future through compound growth visualization and habit analysis.</p>
+        </section>
+
+        <div class="calculator-container">
+            <div class="calculator-section">
+                <h3>Net Worth Calculator</h3>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <h4>Assets</h4>
+                        <div class="input-row">
+                            <label for="cash">Cash & Savings</label>
+                            <input type="number" id="cash" placeholder="0" min="0" step="0.01">
+                        </div>
+                        <div class="input-row">
+                            <label for="investments">Investments</label>
+                            <input type="number" id="investments" placeholder="0" min="0" step="0.01">
+                        </div>
+                        <div class="input-row">
+                            <label for="retirement">Retirement Accounts</label>
+                            <input type="number" id="retirement" placeholder="0" min="0" step="0.01">
+                        </div>
+                        <div class="input-row">
+                            <label for="realestate">Real Estate Value</label>
+                            <input type="number" id="realestate" placeholder="0" min="0" step="0.01">
+                        </div>
+                        <div class="input-row">
+                            <label for="otherassets">Other Assets</label>
+                            <input type="number" id="otherassets" placeholder="0" min="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <h4>Liabilities</h4>
+                        <div class="input-row">
+                            <label for="debts">Debts & Liabilities</label>
+                            <input type="number" id="debts" placeholder="0" min="0" step="0.01">
+                        </div>
+                        <div class="input-row">
+                            <label for="mortgage">Mortgage</label>
+                            <input type="number" id="mortgage" placeholder="0" min="0" step="0.01">
+                        </div>
+                        <div class="input-row">
+                            <label for="creditcards">Credit Card Debt</label>
+                            <input type="number" id="creditcards" placeholder="0" min="0" step="0.01">
+                        </div>
+                        <div class="input-row">
+                            <label for="loans">Other Loans</label>
+                            <input type="number" id="loans" placeholder="0" min="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-section">
+                    <div class="net-worth-display">
+                        <div class="metric">
+                            <span class="label">Total Assets</span>
+                            <span class="value" id="totalAssets">$0</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Total Liabilities</span>
+                            <span class="value" id="totalLiabilities">$0</span>
+                        </div>
+                        <div class="metric primary">
+                            <span class="label">Net Worth</span>
+                            <span class="value" id="netWorth">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="projection-section">
+                <h3>Future Projections</h3>
+                <div class="projection-inputs">
+                    <div class="input-row">
+                        <label for="monthlyInvestment">Monthly Investment</label>
+                        <input type="number" id="monthlyInvestment" placeholder="0" min="0" step="0.01">
+                    </div>
+                    <div class="input-row">
+                        <label for="annualReturn">Expected Annual Return (%)</label>
+                        <input type="number" id="annualReturn" placeholder="7" min="0" max="20" step="0.1" value="7">
+                    </div>
+                </div>
+
+                <div class="projection-grid">
+                    <div class="projection-card">
+                        <span class="timeframe">10 Years</span>
+                        <span class="projected-value" id="projection10">$0</span>
+                    </div>
+                    <div class="projection-card">
+                        <span class="timeframe">20 Years</span>
+                        <span class="projected-value" id="projection20">$0</span>
+                    </div>
+                    <div class="projection-card">
+                        <span class="timeframe">30 Years</span>
+                        <span class="projected-value" id="projection30">$0</span>
+                    </div>
+                    <div class="projection-card">
+                        <span class="timeframe">50 Years</span>
+                        <span class="projected-value" id="projection50">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="habit-analyzer">
+                <h3>Habit Impact Analyzer</h3>
+                <p class="habit-description">See the long-term impact of redirecting everyday spending habits</p>
+                
+                <div class="habit-input">
+                    <div class="input-row">
+                        <label for="habitCost">Daily/Weekly Expense (e.g., coffee, cigarettes)</label>
+                        <input type="number" id="habitCost" placeholder="5" min="0" step="0.01">
+                    </div>
+                    <div class="input-row">
+                        <label for="habitFrequency">Frequency</label>
+                        <select id="habitFrequency">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="habit-results">
+                    <div class="habit-comparison">
+                        <div class="habit-card">
+                            <h4>Cost of Habit</h4>
+                            <div class="habit-timeframes">
+                                <div class="timeframe-item">
+                                    <span class="period">1 Year:</span>
+                                    <span class="cost" id="habitCost1Year">$0</span>
+                                </div>
+                                <div class="timeframe-item">
+                                    <span class="period">10 Years:</span>
+                                    <span class="cost" id="habitCost10Years">$0</span>
+                                </div>
+                                <div class="timeframe-item">
+                                    <span class="period">30 Years:</span>
+                                    <span class="cost" id="habitCost30Years">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="habit-card investment-card">
+                            <h4>If Invested Instead</h4>
+                            <div class="habit-timeframes">
+                                <div class="timeframe-item">
+                                    <span class="period">1 Year:</span>
+                                    <span class="investment-value" id="habitInvestment1Year">$0</span>
+                                </div>
+                                <div class="timeframe-item">
+                                    <span class="period">10 Years:</span>
+                                    <span class="investment-value" id="habitInvestment10Years">$0</span>
+                                </div>
+                                <div class="timeframe-item">
+                                    <span class="period">30 Years:</span>
+                                    <span class="investment-value" id="habitInvestment30Years">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="opportunity-cost">
+                        <div class="opportunity-metric">
+                            <span class="label">30-Year Opportunity Cost</span>
+                            <span class="value" id="opportunityCost">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Verklýsing. Making financial decisions transparent.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
